@@ -10,7 +10,7 @@ const JavascriptConcept = () => {
 
     // fat arrow funtion
     const buttonClick2 = () => {
-        console.log("fat arrow called");
+        // console.log("fat arrow called");
     }
 
     return (

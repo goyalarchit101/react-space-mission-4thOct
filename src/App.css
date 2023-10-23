@@ -5,6 +5,22 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+
+.two-column-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.two-column-list div {
+    width: 50%;
+    /* This will create two columns */
+    box-sizing: border-box;
+    /* To include padding in the width */
+    /* border: 1px solid; */
+    border-radius: 50%;
+    
+    
+}
 .wrapper{
     padding: 30px;
     max-width: 1200px;
@@ -239,7 +255,7 @@ div.h6,h6{
     background-color: #48b83ee8;
 }
 img{
-    width: 192px;
+    /* width: 192px; */
     height: 132px;
     object-fit: contain;
 }
@@ -318,3 +334,9 @@ img{
         clear: both;
     }
 }
+
+.two-column-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    gap: 10px; /* Adjust the gap as needed */
+  }

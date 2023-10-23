@@ -3,22 +3,62 @@ import Missions from './Missions';
 
 const AllMissions = () => {
   const [data, setData] = useState([]);
+  const [apiUrl, setApiUrl] = useState("https://api.spacexdata.com/v3/launches");
+  const [filteryear, setFilteryear] = useState([]);
+  const [filterOption, setfilterOption] = useState(["All Launches", "Past Launches", "Upcoming Launches", "Latest Launch", 
+  "Next Launch"]);
 
+  function last15Years() {
+    const currentYear = new Date().getFullYear();
+    setFilteryear(Array.from({ length: 15 }, (_, index) => currentYear - index));
+    console.log(filteryear);
+  }
+  
   useEffect(() => {
-    const apiUrl = 'https://api.spacexdata.com/v3/launches';
+  last15Years();
 
     // Use the fetch() method to make the API request
     fetch(apiUrl)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-        // Update the state with the API response data
-        setData(result);
+        if (Array.isArray(result)) {
+          setData(result);
+        }
+        else{
+          let tempResult = [] ;
+          tempResult.push(result);
+          setData(tempResult);
+        }
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, [])
+  }, [apiUrl])
+
+  const filterData= (option)=>{
+    console.log(option);
+     let newApiUrl;
+    switch (option) {
+      case 'All Launches':
+        newApiUrl = 'https://api.spacexdata.com/v3/launches';
+        break;
+      case 'Past Launches':
+        newApiUrl = 'https://api.spacexdata.com/v3/launches/past';
+        break;
+      case 'Upcoming Launches':
+        newApiUrl = 'https://api.spacexdata.com/v3/launches/upcoming';
+        break;
+      case 'Latest Launch':
+        newApiUrl = 'https://api.spacexdata.com/v3/launches/latest';
+        break;
+      case 'Next Launch':
+        newApiUrl = 'https://api.spacexdata.com/v3/launches/next';
+        break;
+      default:
+        newApiUrl = 'https://api.spacexdata.com/v3/launches';
+    }
+    setApiUrl(newApiUrl);
+  }
 
 
 
@@ -30,7 +70,7 @@ const AllMissions = () => {
         <div className="h3">Space Missions</div>
         <div className="ml-auto d-flex align-items-center views">
           {" "}
-          <span className="green-label px-md-2 px-1">428</span>{" "}
+          <span className="green-label px-md-2 px-1">{data.length}</span>{" "}
           <span className="text-muted">Products</span>{" "}
         </div>
       </div>
@@ -40,14 +80,15 @@ const AllMissions = () => {
       <div className="d-lg-flex align-items-lg-center pt-2">
         <div className="form-inline d-flex align-items-center my-2 mr-lg-2 radio bg-light border">
           {" "}
-          <label className="options">
-            Most Popular <input type="radio" name="radio" />{" "}
-            <span className="checkmark" />{" "}
-          </label>{" "}
-          <label className="options">
-            Cheapest <input type="radio" name="radio" defaultChecked="" />{" "}
-            <span className="checkmark" />{" "}
-          </label>{" "}
+
+          {filterOption.map((option, index) => {
+            return (
+              <label key={index} className="options">
+                {option} <input onChange={()=>filterData(option)} type="radio" name="radio" />{" "}
+                <span className="checkmark" />{" "}
+              </label>
+            )
+          })}
         </div>
       </div>
 
@@ -55,28 +96,12 @@ const AllMissions = () => {
       <div className="content py-md-0 py-3">
         <section id="sidebar">
           <div className="py-3">
-            <h5 className="font-weight-bold">Categories</h5>
+            <h5 className="font-weight-bold">Years</h5>
             <ul className="list-group">
-              <li className="list-group-item list-group-item-action d-flex justify-content-between align-items-center category">
-                {" "}
-                vegetables{" "}
-                <span className="badge badge-primary badge-pill">328</span>{" "}
-              </li>
-              <li className="list-group-item list-group-item-action d-flex justify-content-between align-items-center category">
-                {" "}
-                Fruits <span className="badge badge-primary badge-pill">
-                  112
-                </span>{" "}
-              </li>
-              <li className="list-group-item list-group-item-action d-flex justify-content-between align-items-center category">
-                {" "}
-                Kitchen Accessories{" "}
-                <span className="badge badge-primary badge-pill">32</span>{" "}
-              </li>
-              <li className="list-group-item list-group-item-action d-flex justify-content-between align-items-center category">
-                {" "}
-                Chefs Tips{" "}
-                <span className="badge badge-primary badge-pill">48</span>{" "}
+              <li className="two-column-list">
+                {filteryear.map((year, index) => (
+                  <div key={index}>{year}</div>
+                ))}
               </li>
             </ul>
           </div>
